@@ -1,12 +1,15 @@
-// API Configuration - Works in all environments
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// API Configuration - ensure no double slashes
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const classifyImage = async (base64Image) => {
   try {
     console.log('📤 Sending image to backend API...');
-    console.log('🔗 API URL:', `${API_URL}/classify`);
     
-    const response = await fetch(`${API_URL}/classify`, {
+    // Ensure URL doesn't have double slashes
+    const apiEndpoint = `${API_URL.replace(/\/$/, '')}/api/classify`;
+    console.log('🔗 API URL:', apiEndpoint);
+    
+    const response = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
