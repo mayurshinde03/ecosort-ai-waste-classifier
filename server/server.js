@@ -32,13 +32,14 @@ const classifyRoutes = require('./routes/classify');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration
+// Update CORS section
 app.use(cors({
-  origin: '*',
+  origin: process.env.CLIENT_URL || '*', // Will set this env variable on Render
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 
 app.options('*', cors());
 
