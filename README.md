@@ -8,18 +8,7 @@
 An intelligent waste management web application that leverages **Google Gemini's vision AI** to instantly classify waste items, determine recyclability, and provide proper disposal guidance.
 
 > 🎓 Built as a full-stack hackathon project demonstrating AI integration, computer vision, and sustainable technology.
-
-## 🌐 Live Demo
-
-**🚀 [Try EcoSort Live](https://ecosort-ai-waste-classifier.onrender.com)**
-
-- **Frontend:** https://ecosort-ai-waste-classifier.onrender.com
-- **Backend API:** https://ecosort-backend-sri8.onrender.com
-- **GitHub Repository:** https://github.com/mayurshinde03/ecosort-ai-waste-classifier
-
-⚠️ **Note:** First request might take 30-60 seconds as the backend wakes from sleep (Render free tier).
-
----
+**
 
 ## 🎯 Problem Statement
 
