@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const ImageUpload = ({ onImageSelect, onAutoAnalyze }) => {
   const [preview, setPreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -173,68 +174,123 @@ const ImageUpload = ({ onImageSelect, onAutoAnalyze }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto">
       {!preview ? (
         <>
           {!isCameraOpen ? (
-            // Upload Interface
+            // Upload Interface - Glassmorphism
             <div
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
-              className={`border-4 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+              className={`relative rounded-3xl p-12 text-center transition-all duration-500 ${
                 isDragging 
-                  ? 'border-green-500 bg-green-500/10 scale-105' 
-                  : 'border-gray-700 bg-gray-800/30 hover:border-green-500/50'
+                  ? 'border-4 border-green-500 bg-green-500/20 backdrop-blur-xl scale-105 shadow-2xl shadow-green-500/50' 
+                  : 'border-4 border-dashed border-white/10 bg-white/5 backdrop-blur-xl hover:border-green-500/50 hover:bg-white/10'
               }`}
             >
-              <div className="text-7xl mb-6 animate-bounce">📸</div>
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Upload or Capture Image
-              </h3>
-              <p className="text-gray-400 mb-8 text-lg">
-                Drag and drop, browse files, or open camera
-              </p>
+              {/* Gradient Glow */}
+              <div className={`absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl blur-2xl opacity-0 ${isDragging ? 'opacity-40' : ''} transition-all duration-500`}/>
               
-              {cameraError && (
-                <div className="mb-6 p-4 bg-red-900/30 border-l-4 border-red-500 rounded text-red-300">
-                  <p className="font-semibold">❌ {cameraError}</p>
+              <div className="relative z-10">
+                {/* Icon */}
+                <div className="mb-8 inline-block">
+                  <div className={`w-32 h-32 rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-7xl transform transition-all duration-500 shadow-2xl ${
+                    isDragging ? 'scale-125 rotate-12' : 'animate-bounce-slow'
+                  }`}>
+                    📸
+                  </div>
                 </div>
-              )}
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full hover:shadow-lg hover:shadow-blue-500/50 transition-all transform hover:scale-105 font-semibold text-lg"
-                >
-                  📁 Browse Files
-                </button>
-                <button
-                  onClick={openCamera}
-                  className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-full hover:shadow-lg hover:shadow-green-500/50 transition-all transform hover:scale-105 font-semibold text-lg"
-                >
-                  📷 Open Camera
-                </button>
+
+                <h3 className="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                  Upload or Capture
+                </h3>
+                <p className="text-gray-400 mb-8 text-xl max-w-2xl mx-auto leading-relaxed">
+                  {isDragging ? '✨ Drop your image here' : 'Drag and drop, browse files, or open camera'}
+                </p>
+                
+                {/* Error Display */}
+                {cameraError && (
+                  <div className="mb-8 p-6 bg-red-900/30 backdrop-blur-xl border-l-4 border-red-500 rounded-2xl shadow-xl max-w-2xl mx-auto">
+                    <div className="flex items-start gap-3">
+                      <span className="text-3xl">❌</span>
+                      <div className="text-left">
+                        <p className="font-bold text-red-300 text-lg mb-1">Camera Error</p>
+                        <p className="text-red-200">{cameraError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    onMouseEnter={() => setHoveredCard('upload')}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    className="group relative px-12 py-5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full overflow-hidden shadow-2xl shadow-blue-500/50 font-bold text-xl transition-all transform hover:scale-110"
+                  >
+                    <span className="relative z-10 flex items-center gap-3">
+                      <span className="text-2xl">📁</span>
+                      <span>Browse Files</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+
+                  <button
+                    onClick={openCamera}
+                    onMouseEnter={() => setHoveredCard('camera')}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    className="group relative px-12 py-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full overflow-hidden shadow-2xl shadow-green-500/50 font-bold text-xl transition-all transform hover:scale-110"
+                  >
+                    <span className="relative z-10 flex items-center gap-3">
+                      <span className="text-2xl">📷</span>
+                      <span>Open Camera</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                </div>
+
+                {/* File Info */}
+                <div className="flex flex-wrap justify-center gap-4">
+                  {[
+                    { icon: '✓', text: 'PNG, JPG, WEBP' },
+                    { icon: '📏', text: 'Max 10MB' },
+                    { icon: '⚡', text: 'Instant Analysis' }
+                  ].map((item, i) => (
+                    <div key={i} className="px-5 py-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-full">
+                      <div className="flex items-center gap-2 text-gray-400">
+                        <span className="text-green-400">{item.icon}</span>
+                        <span className="text-sm font-medium">{item.text}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileSelect(e.target.files[0])}
+                  className="hidden"
+                />
               </div>
-              
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileSelect(e.target.files[0])}
-                className="hidden"
-              />
             </div>
           ) : (
-            // LIVE CAMERA FEED - THIS IS THE KEY PART
-            <div className="relative rounded-2xl overflow-hidden border-4 border-green-500 shadow-2xl bg-black">
+            // LIVE CAMERA FEED - Enhanced Glassmorphism
+            <div className="relative rounded-3xl overflow-hidden border-4 border-green-500 shadow-2xl shadow-green-500/50 bg-black">
+              {/* Glow Effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl blur-2xl opacity-50 animate-pulse"/>
+              
               {/* THIS IS THE LIVE VIDEO ELEMENT */}
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-auto block"
+                className="relative z-10 w-full h-auto block"
                 style={{
                   minHeight: '400px',
                   maxHeight: '70vh',
@@ -243,90 +299,164 @@ const ImageUpload = ({ onImageSelect, onAutoAnalyze }) => {
                 }}
               />
               
-              {/* Camera UI Overlay */}
-              <div className="absolute inset-0 pointer-events-none">
-                {/* Corner Brackets */}
-                <div className="absolute top-4 left-4 w-16 h-16 border-t-4 border-l-4 border-green-400 rounded-tl-xl animate-pulse"/>
-                <div className="absolute top-4 right-4 w-16 h-16 border-t-4 border-r-4 border-green-400 rounded-tr-xl animate-pulse"/>
-                <div className="absolute bottom-24 left-4 w-16 h-16 border-b-4 border-l-4 border-green-400 rounded-bl-xl animate-pulse"/>
-                <div className="absolute bottom-24 right-4 w-16 h-16 border-b-4 border-r-4 border-green-400 rounded-br-xl animate-pulse"/>
+              {/* Camera UI Overlay - Enhanced */}
+              <div className="absolute inset-0 pointer-events-none z-20">
+                {/* Corner Brackets - Animated */}
+                <div className="absolute top-6 left-6 w-20 h-20 border-t-4 border-l-4 border-green-400 rounded-tl-2xl animate-pulse"/>
+                <div className="absolute top-6 right-6 w-20 h-20 border-t-4 border-r-4 border-green-400 rounded-tr-2xl animate-pulse"/>
+                <div className="absolute bottom-32 left-6 w-20 h-20 border-b-4 border-l-4 border-green-400 rounded-bl-2xl animate-pulse"/>
+                <div className="absolute bottom-32 right-6 w-20 h-20 border-b-4 border-r-4 border-green-400 rounded-br-2xl animate-pulse"/>
                 
-                {/* Center Crosshair */}
+                {/* Center Targeting System */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-32 h-32 border-2 border-green-400/50 rounded-full animate-ping"></div>
+                  <div className="relative">
+                    <div className="w-40 h-40 border-2 border-green-400/30 rounded-full animate-ping"></div>
+                    <div className="absolute inset-0 w-40 h-40 border-2 border-green-400 rounded-full"></div>
+                    {/* Crosshair */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <div className="w-12 h-0.5 bg-green-400"></div>
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-12 bg-green-400"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Scanning Line Animation */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute w-full h-1 bg-gradient-to-r from-transparent via-green-400 to-transparent animate-scan opacity-50"></div>
                 </div>
               </div>
               
-              {/* LIVE Indicator */}
-              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-600/90 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 pointer-events-none">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse"/>
-                <span className="text-white font-bold text-sm">🔴 LIVE</span>
+              {/* LIVE Indicator - Enhanced */}
+              <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-30">
+                <div className="bg-red-600/90 backdrop-blur-xl px-6 py-3 rounded-full flex items-center gap-3 shadow-2xl border-2 border-white/20">
+                  <div className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                  </div>
+                  <span className="text-white font-bold text-base uppercase tracking-wider">Recording</span>
+                </div>
               </div>
               
-              {/* Instructions */}
-              <div className="absolute top-16 left-1/2 transform -translate-x-1/2 bg-gray-900/80 backdrop-blur-sm px-4 py-2 rounded-lg pointer-events-none">
-                <p className="text-white text-sm font-semibold">Point camera at object and click capture</p>
+              {/* Instructions - Glassmorphism */}
+              <div className="absolute top-24 left-1/2 transform -translate-x-1/2 z-30">
+                <div className="bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/20 shadow-xl">
+                  <p className="text-white text-base font-semibold flex items-center gap-2">
+                    <span className="text-xl">🎯</span>
+                    <span>Point at object and capture</span>
+                  </p>
+                </div>
               </div>
               
-              {/* CAPTURE AND CLOSE BUTTONS */}
-              <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center gap-8 pointer-events-auto">
-                {/* CAPTURE BUTTON - BIG GREEN BUTTON */}
+              {/* CAPTURE AND CLOSE BUTTONS - Enhanced */}
+              <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-12 pointer-events-auto z-30">
+                {/* CAPTURE BUTTON - Big Glassmorphic Button */}
                 <button
                   onClick={capturePhoto}
                   disabled={isCapturing}
-                  className="relative group"
+                  className="group relative"
                   title="Capture Photo"
                 >
-                  <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl hover:shadow-green-500/50 transition-all transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed border-4 border-white">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative w-28 h-28 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl transition-all transform group-hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed border-4 border-white/50 backdrop-blur-sm">
                     {isCapturing ? (
-                      <span className="text-5xl animate-spin">⚡</span>
+                      <span className="text-6xl animate-spin">⚡</span>
                     ) : (
-                      <span className="text-5xl">📸</span>
+                      <span className="text-6xl group-hover:scale-110 transition-transform">📸</span>
                     )}
                   </div>
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900/90 px-3 py-1 rounded-full whitespace-nowrap">
-                    <span className="text-white text-xs font-bold">CAPTURE</span>
+                  <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                    <span className="text-white text-sm font-bold uppercase tracking-wide">
+                      {isCapturing ? 'Capturing...' : 'Capture'}
+                    </span>
                   </div>
                 </button>
                 
-                {/* CLOSE BUTTON */}
+                {/* CLOSE BUTTON - Enhanced */}
                 <button
                   onClick={closeCamera}
-                  className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-500 rounded-full flex items-center justify-center shadow-2xl hover:shadow-red-500/50 transition-all transform hover:scale-110 border-4 border-white"
+                  className="group relative w-20 h-20 bg-gradient-to-br from-red-600 to-red-500 rounded-full flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-4 border-white/50 backdrop-blur-sm"
                   title="Close Camera"
                 >
-                  <span className="text-3xl text-white font-bold">✕</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-full blur-xl opacity-0 group-hover:opacity-75 transition-opacity"></div>
+                  <span className="relative text-4xl text-white font-bold">✕</span>
                 </button>
               </div>
             </div>
           )}
         </>
       ) : (
-        // Image Preview
+        // Image Preview - Enhanced Glassmorphism
         <div className="relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"/>
-          <div className="relative">
+          {/* Glow Effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl blur-2xl opacity-50 group-hover:opacity-75 transition-all duration-500"/>
+          
+          <div className="relative rounded-3xl overflow-hidden border-2 border-white/20 shadow-2xl bg-white/5 backdrop-blur-xl">
             <img
               src={preview}
               alt="Captured"
-              className="w-full h-auto rounded-2xl shadow-2xl border-2 border-gray-700"
+              className="w-full h-auto"
             />
+            
+            {/* Processing Overlay */}
             {isCapturing && (
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center">
-                <div className="text-6xl mb-4 animate-spin">⚡</div>
-                <p className="text-white font-bold text-2xl mb-2">Processing...</p>
-                <p className="text-gray-300">AI is analyzing your image</p>
+              <div className="absolute inset-0 bg-black/70 backdrop-blur-xl flex flex-col items-center justify-center z-20">
+                <div className="relative mb-6">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-2xl">
+                    <span className="text-6xl animate-spin">⚡</span>
+                  </div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 blur-xl opacity-75 animate-pulse"></div>
+                </div>
+                <p className="text-white font-bold text-3xl mb-3">Processing...</p>
+                <p className="text-gray-300 text-lg">AI is analyzing your image</p>
+                <div className="mt-6 flex gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
               </div>
             )}
+            
+            {/* Remove Button - Enhanced */}
             <button
               onClick={resetImage}
-              className="absolute top-4 right-4 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all font-semibold shadow-lg transform hover:scale-105"
+              className="group/btn absolute top-6 right-6 px-8 py-4 bg-red-600/90 hover:bg-red-700 backdrop-blur-xl text-white rounded-full transition-all font-bold shadow-2xl transform hover:scale-110 border-2 border-white/30 z-10"
             >
-              ✕ Remove
+              <span className="flex items-center gap-2">
+                <span className="text-xl">✕</span>
+                <span>Remove</span>
+              </span>
             </button>
+
+            {/* Image Info Badge */}
+            <div className="absolute bottom-6 left-6 px-5 py-3 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 z-10">
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">✓</span>
+                <span className="text-white font-semibold text-sm">Image Ready</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        @keyframes scan {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(100vh); }
+        }
+
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+
+        .animate-scan {
+          animation: scan 2s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };
