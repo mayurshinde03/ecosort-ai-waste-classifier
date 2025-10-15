@@ -10,10 +10,10 @@ const ResultCard = ({ result }) => {
         {/* Outer Glow Effect */}
         <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
         
-        {/* Main Card Container - FIXED BACKGROUND */}
+        {/* Main Card Container */}
         <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/10">
           
-          {/* Header Section - More Prominent */}
+          {/* Header Section */}
           <div className="relative p-10 text-center bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-b border-white/10">
             <div className="inline-flex items-center gap-3 mb-4 px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
               <span className="relative flex h-2.5 w-2.5">
@@ -34,10 +34,10 @@ const ResultCard = ({ result }) => {
             </div>
           </div>
 
-          {/* Content Area - CLEAN WHITE BACKGROUND */}
+          {/* Content Area */}
           <div className="p-8 space-y-6 bg-gray-900/50">
             
-            {/* Material Type Card - BRIGHT & CLEAR */}
+            {/* Material Type Card */}
             <div className="relative group/material">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur opacity-0 group-hover/material:opacity-30 transition-all"></div>
               <div className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50">
@@ -57,7 +57,19 @@ const ResultCard = ({ result }) => {
               </div>
             </div>
 
-            {/* Disposal Instructions - CLEAN CARD */}
+            {/* Collection Type Badge */}
+            {result.collectionType && (
+              <div className="flex justify-center">
+                <div className="px-6 py-3 bg-red-500/20 backdrop-blur-sm rounded-full border border-red-500/30 flex items-center gap-2">
+                  <span className="text-xl">🗑️</span>
+                  <span className="text-red-400 font-bold text-sm uppercase tracking-wide">
+                    {result.collectionType}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Disposal Instructions */}
             <div className="relative group/disposal">
               <div className="absolute -inset-0.5 rounded-2xl blur opacity-0 group-hover/disposal:opacity-30 transition-all" style={{ background: `linear-gradient(135deg, ${binColor.color}, ${binColor.color}88)` }}></div>
               <div className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50">
@@ -92,7 +104,7 @@ const ResultCard = ({ result }) => {
               </div>
             </div>
 
-            {/* Recyclable Status Badge - BRIGHTER */}
+            {/* Recyclable Status Badge */}
             <div className="flex justify-center py-2">
               <div className="relative group/status">
                 <div className={`absolute -inset-1 rounded-full blur-lg opacity-50 transition-all ${
@@ -111,7 +123,56 @@ const ResultCard = ({ result }) => {
               </div>
             </div>
 
-            {/* Pro Tip Section - VIBRANT */}
+            {/* Special Handling Warning */}
+            {result.specialHandling && result.specialHandlingMessage && (
+              <div className="relative">
+                <div className="bg-yellow-900/30 backdrop-blur-lg rounded-2xl p-6 border-l-4 border-yellow-500">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center text-2xl shadow-lg">
+                      ⚠️
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-yellow-400 mb-2 text-lg">
+                        Special Handling Required
+                      </h4>
+                      <p className="text-yellow-200 leading-relaxed text-base">
+                        {result.specialHandlingMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Preparation Steps */}
+            {result.preparationSteps && result.preparationSteps.length > 0 && (
+              <div className="relative group/prep">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur opacity-0 group-hover/prep:opacity-30 transition-all"></div>
+                <div className="relative bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50">
+                  <h4 className="font-bold text-white mb-6 text-xl flex items-center gap-3">
+                    <span className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-xl shadow-lg">
+                      🔧
+                    </span>
+                    <span className="text-cyan-400">Preparation Steps</span>
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    {result.preparationSteps.map((step, index) => (
+                      <div key={index} className="flex items-start gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-700/30 hover:border-cyan-500/30 transition-all">
+                        <div className="flex-shrink-0 w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center border border-cyan-500/30">
+                          <span className="text-cyan-400 text-lg">✓</span>
+                        </div>
+                        <p className="text-gray-300 text-base leading-relaxed pt-0.5">
+                          {step}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Pro Recycling Tip */}
             <div className="relative group/tip">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover/tip:opacity-30 transition-all"></div>
               <div className="relative bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-lg rounded-2xl p-6 border-l-4 border-blue-500">
@@ -132,7 +193,30 @@ const ResultCard = ({ result }) => {
               </div>
             </div>
 
-            {/* Common Examples - CLEANER */}
+            {/* Upcycling Idea */}
+            {result.upcyclingIdea && (
+              <div className="relative group/upcycle">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl blur opacity-0 group-hover/upcycle:opacity-30 transition-all"></div>
+                <div className="relative bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-lg rounded-2xl p-6 border-l-4 border-green-500">
+                  <div className="flex items-start gap-5">
+                    <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl flex items-center justify-center text-3xl shadow-xl">
+                      ♻️
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-white mb-3 text-xl flex items-center gap-2">
+                        Upcycling Idea
+                        <span className="text-green-400 text-base">🌱</span>
+                      </h4>
+                      <p className="text-gray-200 leading-relaxed text-base">
+                        {result.upcyclingIdea}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Common Examples */}
             {result.examples && result.examples.length > 0 && (
               <div className="relative group/examples">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur opacity-0 group-hover/examples:opacity-30 transition-all"></div>
@@ -158,7 +242,7 @@ const ResultCard = ({ result }) => {
               </div>
             )}
 
-            {/* Action Buttons - PROMINENT */}
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button className="flex-1 group/btn relative px-10 py-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full overflow-hidden shadow-2xl shadow-green-500/40 font-bold text-lg transition-all transform hover:scale-105">
                 <span className="relative z-10 flex items-center justify-center gap-3">
@@ -175,16 +259,6 @@ const ResultCard = ({ result }) => {
                 </span>
               </button>
             </div>
-          </div>
-
-          {/* Bottom Action - Scan Another */}
-          <div className="p-6 bg-gray-900/80 border-t border-white/5 text-center">
-            <button className="group px-8 py-4 bg-gray-800/70 hover:bg-gray-700/70 rounded-full font-semibold text-base transition-all border border-gray-700/50 hover:border-blue-500/50 text-white transform hover:scale-105 shadow-lg">
-              <span className="flex items-center gap-3">
-                <span className="text-xl">🔄</span>
-                <span>Scan Another Item</span>
-              </span>
-            </button>
           </div>
         </div>
       </div>
